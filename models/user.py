@@ -1,74 +1,99 @@
 import boto3
 import bcrypt
+from boto3.dynamodb.conditions import Key
+from config import Config
 from datetime import datetime
 from botocore.exceptions import ClientError
-from config import Config
 
 class User:
-    """User model for managing user data in DynamoDB"""
+    """User model for authentication and user management"""
     
     def __init__(self):
-        self.dynamodb = boto3.resource(
-            'dynamodb',
-            region_name=Config.AWS_REGION,
-            aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
-        )
-        self.table = self.dynamodb.Table(Config.DYNAMODB_USERS_TABLE)
+        # Check if using local storage
+        if Config.USE_LOCAL_STORAGE:
+            from local_storage import local_db
+            self.storage = local_db
+            self.use_local = True
+        else:
+            self.dynamodb = boto3.resource('dynamodb',
+                region_name=Config.AWS_REGION,
+                aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
+            )
+            self.table = self.dynamodb.Table(Config.DYNAMODB_USERS_TABLE)
+            self.use_local = False
     
     def create_user(self, user_id, name, email, password, role='customer'):
         """Create a new user with hashed password"""
-        try:
-            # Hash the password
-            password_hash = bcrypt.hashpw(
-                password.encode('utf-8'),
-                bcrypt.gensalt(rounds=Config.BCRYPT_ROUNDS)
-            ).decode('utf-8')
-            
+        # Hash password
+        password_hash = bcrypt.hashpw(
+            password.encode('utf-8'),
+            bcrypt.gensalt(rounds=Config.BCRYPT_ROUNDS)
+        ).decode('utf-8')
+        
+        if self.use_local:
+            # Use local storage
+            try:
+                self.storage.create_user(user_id, name, email, password_hash, role)
+                return {'success': True, 'user_id': user_id}
+            except Exception as e:
+                return {'success': False, 'error': str(e)}
+        else:
+            # Use DynamoDB
             timestamp = datetime.utcnow().isoformat()
             
-            # Create user item
-            self.table.put_item(
-                Item={
-                    'UserID': user_id,
-                    'Name': name,
-                    'Email': email,
-                    'PasswordHash': password_hash,
-                    'Role': role,
-                    'CreatedAt': timestamp,
-                    'UpdatedAt': timestamp
-                },
-                ConditionExpression='attribute_not_exists(UserID)'
-            )
-            
-            return {'success': True, 'user_id': user_id}
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
+            try:
+                self.table.put_item(
+                    Item={
+                        'UserID': user_id,
+                        'Name': name,
+                        'Email': email,
+                        'PasswordHash': password_hash,
+                        'Role': role,
+                        'CreatedAt': timestamp,
+                        'UpdatedAt': timestamp
+                    },
+                    ConditionExpression='attribute_not_exists(UserID)'
+                )
+                return {'success': True, 'user_id': user_id}
+            except self.dynamodb.meta.client.exceptions.ConditionalCheckFailedException:
                 return {'success': False, 'error': 'User already exists'}
-            return {'success': False, 'error': str(e)}
+            except Exception as e:
+                return {'success': False, 'error': str(e)}
     
     def get_user_by_id(self, user_id):
-        """Retrieve user by UserID"""
-        try:
-            response = self.table.get_item(Key={'UserID': user_id})
-            return response.get('Item')
-        except ClientError as e:
-            print(f"Error retrieving user: {e}")
-            return None
+        """Get user by UserID"""
+        if self.use_local:
+            # Use local storage
+            return self.storage.get_user_by_id(user_id)
+        else:
+            # Use DynamoDB
+            try:
+                response = self.table.get_item(Key={'UserID': user_id})
+                return response.get('Item')
+            except Exception as e:
+                print(f"Error getting user by ID: {e}")
+                return None
     
     def get_user_by_email(self, email):
-        """Retrieve user by email using GSI"""
-        try:
-            response = self.table.query(
-                IndexName='EmailIndex',
-                KeyConditionExpression='Email = :email',
-                ExpressionAttributeValues={':email': email}
-            )
-            items = response.get('Items', [])
-            return items[0] if items else None
-        except ClientError as e:
-            print(f"Error retrieving user by email: {e}")
-            return None
+        """Get user by email address"""
+        if self.use_local:
+            # Use local storage
+            return self.storage.get_user_by_email(email)
+        else:
+            # Use DynamoDB
+            try:
+                response = self.table.query(
+                    IndexName='EmailIndex',
+                    KeyConditionExpression=Key('Email').eq(email)
+                )
+                
+                if response['Items']:
+                    return response['Items'][0]
+                return None
+            except Exception as e:
+                print(f"Error getting user by email: {e}")
+                return None
     
     def verify_password(self, password, password_hash):
         """Verify a password against its hash"""

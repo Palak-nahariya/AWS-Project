@@ -8,9 +8,10 @@ app = Flask(__name__)
 
 # Configuration
 app.config.from_object(Config)
+app.secret_key = Config.SECRET_KEY
 
 # Session configuration
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=Config.SESSION_TIMEOUT)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(seconds=Config.PERMANENT_SESSION_LIFETIME)
 
 # Register blueprints
 app.register_blueprint(auth_bp)

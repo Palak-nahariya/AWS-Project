@@ -8,13 +8,20 @@ class Account:
     """Account model for managing bank accounts in DynamoDB"""
     
     def __init__(self):
-        self.dynamodb = boto3.resource(
-            'dynamodb',
-            region_name=Config.AWS_REGION,
-            aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
-        )
-        self.table = self.dynamodb.Table(Config.DYNAMODB_ACCOUNTS_TABLE)
+        # Check if using local storage
+        if Config.USE_LOCAL_STORAGE:
+            from local_storage import local_db
+            self.storage = local_db
+            self.use_local = True
+        else:
+            self.dynamodb = boto3.resource(
+                'dynamodb',
+                region_name=Config.AWS_REGION,
+                aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY
+            )
+            self.table = self.dynamodb.Table(Config.DYNAMODB_ACCOUNTS_TABLE)
+            self.use_local = False
     
     def create_account(self, account_id, user_id, initial_balance=0, account_type='SAVINGS'):
         """Create a new bank account"""

@@ -1,7 +1,12 @@
-from models.account import Account
-from models.transaction import Transaction
 from config import Config
 import uuid
+
+# Use simple models if in local storage mode, otherwise use full models
+if Config.USE_LOCAL_STORAGE:
+    from simple_models import Account, Transaction
+else:
+    from models.account import Account
+    from models.transaction import Transaction
 
 class BankingService:
     """Banking service for core banking operations"""

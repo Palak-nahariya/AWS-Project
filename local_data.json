@@ -1,0 +1,45 @@
+{
+  "users": {
+    "d210938c-ff13-4444-8e35-885f6b40173e": {
+      "UserID": "d210938c-ff13-4444-8e35-885f6b40173e",
+      "Name": "Palak Nahariya",
+      "Email": "ken@mail.com",
+      "Role": "customer",
+      "CreatedAt": "2026-01-30T06:34:09.757781",
+      "UpdatedAt": "2026-01-30T06:34:09.757781"
+    }
+  },
+  "accounts": {
+    "9bdbfa16-26f1-4b13-b48a-801d19c47f61": {
+      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
+      "UserID": "d210938c-ff13-4444-8e35-885f6b40173e",
+      "Balance": 1050.0,
+      "AccountType": "SAVINGS",
+      "Status": "ACTIVE",
+      "CreatedAt": "2026-01-30T06:34:09.769954",
+      "UpdatedAt": "2026-01-30T06:35:53.044484"
+    }
+  },
+  "transactions": {
+    "8fcc161e-4825-4e04-ba70-cb0c8561d44f": {
+      "TransactionID": "8fcc161e-4825-4e04-ba70-cb0c8561d44f",
+      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
+      "TransactionType": "WITHDRAW",
+      "Amount": 50.0,
+      "Date": "2026-01-30T06:35:34.711053",
+      "Status": "COMPLETED",
+      "Description": "",
+      "FraudScore": 0
+    },
+    "d495e3e0-a54d-4d66-8f05-1d8e623f948d": {
+      "TransactionID": "d495e3e0-a54d-4d66-8f05-1d8e623f948d",
+      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
+      "TransactionType": "DEPOSIT",
+      "Amount": 100.0,
+      "Date": "2026-01-30T06:35:53.042702",
+      "Status": "COMPLETED",
+      "Description": "",
+      "FraudScore": 0
+    }
+  }
+}
