@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Transfer - Cloud Bank{% endblock %}
+
+{% block content %}
+<div class="container-sm fade-in" style="margin-top: 2rem;">
+    <h2 class="text-center mb-3">🔄 Transfer Funds</h2>
+
+    <div class="card">
+        <form method="POST" action="{{ url_for('transaction.transfer') }}">
+            <div class="form-group">
+                <label for="source_account_id" class="form-label">From Account</label>
+                <select id="source_account_id" name="source_account_id" class="form-control form-select" required>
+                    {% for account in accounts %}
+                    <option value="{{ account.AccountID }}">
+                        {{ account.AccountType }} - Balance: ${{ "%.2f"|format(account.Balance) }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="target_account_id" class="form-label">To Account ID</label>
+                <input type="text" id="target_account_id" name="target_account_id" class="form-control"
+                    placeholder="Enter recipient account ID" required>
+                <small class="text-muted">Enter the full Account ID of the recipient</small>
+            </div>
+
+            <div class="form-group">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" id="amount" name="amount" class="form-control" placeholder="0.00" step="0.01"
+                    min="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">Description (Optional)</label>
+                <input type="text" id="description" name="description" class="form-control"
+                    placeholder="e.g., Payment for services">
+            </div>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ Info:</strong> Transfers are processed instantly. Please verify the recipient account ID
+                before proceeding.
+            </div>
+
+            <div class="grid grid-2" style="gap: 1rem;">
+                <button type="submit" class="btn btn-primary">Transfer</button>
+                <a href="{{ url_for('account.dashboard') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

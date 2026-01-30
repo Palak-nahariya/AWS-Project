@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Cloud Bank{% endblock %}</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    {% if session.get('user_id') %}
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ url_for('account.dashboard') }}" class="navbar-brand">
+                ☁️ Cloud Bank
+            </a>
+            <ul class="navbar-nav">
+                <li><a href="{{ url_for('account.dashboard') }}" class="nav-link">Dashboard</a></li>
+                <li><a href="{{ url_for('transaction.deposit') }}" class="nav-link">Deposit</a></li>
+                <li><a href="{{ url_for('transaction.withdraw') }}" class="nav-link">Withdraw</a></li>
+                <li><a href="{{ url_for('transaction.transfer') }}" class="nav-link">Transfer</a></li>
+                <li><a href="{{ url_for('transaction.history') }}" class="nav-link">History</a></li>
+                
+                {% if session.get('role') == 'analyst' %}
+                <li><a href="{{ url_for('analytics.fraud_monitoring') }}" class="nav-link">🔍 Fraud Monitor</a></li>
+                {% elif session.get('role') == 'manager' %}
+                <li><a href="{{ url_for('analytics.reports') }}" class="nav-link">📊 Reports</a></li>
+                {% elif session.get('role') == 'compliance' %}
+                <li><a href="{{ url_for('analytics.compliance') }}" class="nav-link">⚖️ Compliance</a></li>
+                {% endif %}
+                
+                <li><span class="nav-link">👤 {{ session.get('name') }}</span></li>
+                <li><a href="{{ url_for('auth.logout') }}" class="nav-link">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    {% endif %}
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container" style="margin-top: 1rem;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer style="text-align: center; padding: 2rem; color: var(--text-muted); margin-top: 4rem;">
+        <p>&copy; 2026 Cloud Bank Analytics. Powered by AWS.</p>
+    </footer>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

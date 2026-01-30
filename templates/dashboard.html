@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Cloud Bank{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <h1 style="margin: 2rem 0 1rem;">Welcome, {{ session.get('name') }}! 👋</h1>
+
+    <!-- Account Balance Cards -->
+    {% if primary_account %}
+    <div class="grid grid-3 mb-3">
+        <div class="stat-card">
+            <div class="stat-label">Account Balance</div>
+            <div class="stat-value">${{ "%.2f"|format(primary_account.Balance) }}</div>
+            <small style="opacity: 0.8;">Account ID: {{ primary_account.AccountID[:8] }}...</small>
+        </div>
+
+        <div class="card">
+            <div class="stat-label">Account Status</div>
+            <div class="stat-value" style="font-size: 2rem;">
+                {% if primary_account.Status == 'ACTIVE' %}
+                <span class="badge badge-success">✓ Active</span>
+                {% else %}
+                <span class="badge badge-danger">⚠ {{ primary_account.Status }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="stat-label">Account Type</div>
+            <div class="stat-value" style="font-size: 1.5rem;">{{ primary_account.AccountType }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Quick Actions -->
+    <div class="card mb-3">
+        <div class="card-header">Quick Actions</div>
+        <div class="card-body">
+            <div class="grid grid-3">
+                <a href="{{ url_for('transaction.deposit') }}" class="btn btn-secondary">
+                    💰 Deposit Money
+                </a>
+                <a href="{{ url_for('transaction.withdraw') }}" class="btn btn-secondary">
+                    💸 Withdraw Money
+                </a>
+                <a href="{{ url_for('transaction.transfer') }}" class="btn btn-secondary">
+                    🔄 Transfer Funds
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="card">
+        <div class="card-header">Recent Transactions</div>
+        <div class="card-body">
+            {% if recent_transactions %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Fraud Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for txn in recent_transactions %}
+                    <tr>
+                        <td>{{ txn.Date[:19] }}</td>
+                        <td>
+                            {% if txn.TransactionType == 'DEPOSIT' %}
+                            <span class="badge badge-success">Deposit</span>
+                            {% elif txn.TransactionType == 'WITHDRAW' %}
+                            <span class="badge badge-warning">Withdraw</span>
+                            {% else %}
+                            <span class="badge badge-primary">Transfer</span>
+                            {% endif %}
+                        </td>
+                        <td>${{ "%.2f"|format(txn.Amount) }}</td>
+                        <td>
+                            {% if txn.Status == 'COMPLETED' %}
+                            <span class="text-success">✓ Completed</span>
+                            {% elif txn.Status == 'PENDING' %}
+                            <span class="text-warning">⏳ Pending</span>
+                            {% else %}
+                            <span class="text-danger">✗ Failed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if txn.FraudScore >= 90 %}
+                            <span class="badge badge-danger">{{ txn.FraudScore }}</span>
+                            {% elif txn.FraudScore >= 70 %}
+                            <span class="badge badge-warning">{{ txn.FraudScore }}</span>
+                            {% else %}
+                            <span class="badge badge-success">{{ txn.FraudScore }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center mt-2">
+                <a href="{{ url_for('transaction.history') }}" class="btn btn-outline">View All Transactions</a>
+            </div>
+            {% else %}
+            <p class="text-center text-muted">No transactions yet. Start by making a deposit!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Reports - Cloud Bank{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in" style="margin-top: 2rem;">
+    <h1 class="mb-3">📊 Custom Report Generation</h1>
+
+    <!-- Scenario 2: John's Report Generation Workflow -->
+    <div class="card mb-3">
+        <div class="card-header">Generate Financial Report</div>
+        <div class="card-body">
+            <div class="grid grid-3">
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" id="startDate" class="form-control"
+                        value="{{ (request.args.get('start_date') or '2026-01-01')[:10] }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" id="endDate" class="form-control"
+                        value="{{ (request.args.get('end_date') or '2026-01-30')[:10] }}">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">&nbsp;</label>
+                    <button class="btn btn-primary btn-block" onclick="generateReport()">
+                        📈 Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Results -->
+    <div id="reportResults" style="display: none;">
+        <!-- Summary Metrics -->
+        <div class="grid grid-4 mb-3">
+            <div class="stat-card">
+                <div class="stat-label">Total Transactions</div>
+                <div class="stat-value" id="totalTransactions">-</div>
+            </div>
+            <div class="stat-card" style="background: var(--gradient-success);">
+                <div class="stat-label">Deposit Volume</div>
+                <div class="stat-value" id="depositVolume">-</div>
+            </div>
+            <div class="stat-card" style="background: var(--gradient-danger);">
+                <div class="stat-label">Withdrawal Volume</div>
+                <div class="stat-value" id="withdrawalVolume">-</div>
+            </div>
+            <div class="stat-card" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                <div class="stat-label">Transfer Volume</div>
+                <div class="stat-value" id="transferVolume">-</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-2 mb-3">
+            <div class="card">
+                <div class="card-header">Transaction Breakdown</div>
+                <div class="card-body">
+                    <canvas id="transactionChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">Daily Volume Trend</div>
+                <div class="card-body">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Metrics -->
+        <div class="card">
+            <div class="card-header">Detailed Metrics</div>
+            <div class="card-body">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Deposit Count</strong></td>
+                            <td id="depositCount">-</td>
+                            <td><strong>Withdrawal Count</strong></td>
+                            <td id="withdrawalCount">-</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Transfer Count</strong></td>
+                            <td id="transferCount">-</td>
+                            <td><strong>Net Flow</strong></td>
+                            <td id="netFlow">-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Analysis Tools -->
+    <div class="grid grid-2">
+        <div class="card">
+            <div class="card-header">Deposit Growth Analysis</div>
+            <div class="card-body">
+                <button class="btn btn-secondary btn-block" onclick="analyzeDepositTrends(30)">
+                    30-Day Trends
+                </button>
+                <div id="depositTrends" class="mt-2"></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">Transaction Volume Analysis</div>
+            <div class="card-body">
+                <button class="btn btn-secondary btn-block" onclick="analyzeTransactionVolume(24)">
+                    24-Hour Volume
+                </button>
+                <div id="volumeAnalysis" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let transactionChart, volumeChart;
+
+    function generateReport() {
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+
+        fetch('/analytics/api/financial-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                start_date: startDate + 'T00:00:00.000Z',
+                end_date: endDate + 'T23:59:59.999Z'
+            })
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    displayReport(data);
+                } else {
+                    alert('Error generating report: ' + data.error);
+                }
+            });
+    }
+
+    function displayReport(data) {
+        document.getElementById('reportResults').style.display = 'block';
+
+        // Update summary cards
+        document.getElementById('totalTransactions').textContent = data.summary.total_transactions;
+        document.getElementById('depositVolume').textContent = '$' + data.summary.deposit_volume.toFixed(2);
+        document.getElementById('withdrawalVolume').textContent = '$' + data.summary.withdrawal_volume.toFixed(2);
+        document.getElementById('transferVolume').textContent = '$' + data.summary.transfer_volume.toFixed(2);
+
+        // Update detailed metrics
+        document.getElementById('depositCount').textContent = data.summary.deposit_count;
+        document.getElementById('withdrawalCount').textContent = data.summary.withdrawal_count;
+        document.getElementById('transferCount').textContent = data.summary.transfer_count;
+        document.getElementById('netFlow').textContent = '$' + data.summary.net_flow.toFixed(2);
+
+        // Create charts
+        createTransactionChart(data.summary);
+        createVolumeChart(data.daily_volume);
+    }
+
+    function createTransactionChart(summary) {
+        const ctx = document.getElementById('transactionChart').getContext('2d');
+        if (transactionChart) transactionChart.destroy();
+
+        transactionChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Deposits', 'Withdrawals', 'Transfers'],
+                datasets: [{
+                    data: [summary.deposit_count, summary.withdrawal_count, summary.transfer_count],
+                    backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+                }]
+            }
+        });
+    }
+
+    function createVolumeChart(dailyVolume) {
+        const ctx = document.getElementById('volumeChart').getContext('2d');
+        if (volumeChart) volumeChart.destroy();
+
+        const dates = Object.keys(dailyVolume).sort();
+        const volumes = dates.map(d => dailyVolume[d]);
+
+        volumeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dates,
+                datasets: [{
+                    label: 'Daily Volume',
+                    data: volumes,
+                    borderColor: '#667eea',
+                    tension: 0.4
+                }]
+            }
+        });
+    }
+
+    function analyzeDepositTrends(days) {
+        fetch(`/analytics/api/deposit-trends?days=${days}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('depositTrends').innerHTML = `
+                <div class="alert alert-info">
+                    <strong>Total Deposits:</strong> $${data.total_deposits.toFixed(2)}<br>
+                    <strong>Average Daily:</strong> $${data.average_daily_deposits.toFixed(2)}
+                </div>
+            `;
+                }
+            });
+    }
+
+    function analyzeTransactionVolume(hours) {
+        fetch(`/analytics/api/transaction-volume?hours=${hours}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('volumeAnalysis').innerHTML = `
+                <div class="alert alert-info">
+                    <strong>Total Volume:</strong> ${data.total_volume} transactions<br>
+                    <strong>Peak Hour:</strong> ${data.peak_hour}:00
+                </div>
+            `;
+                }
+            });
+    }
+</script>
+{% endblock %}

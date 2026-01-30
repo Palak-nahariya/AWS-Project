@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Fraud Monitoring - Cloud Bank{% endblock %}
+
+{% block extra_head %}
+<style>
+    .transaction-card {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid var(--danger);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .transaction-card:hover {
+        transform: translateX(5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .fraud-critical {
+        border-color: #dc2626;
+        background: rgba(220, 38, 38, 0.15);
+    }
+
+    .fraud-high {
+        border-color: var(--danger);
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    .fraud-medium {
+        border-color: var(--warning);
+        background: rgba(245, 158, 11, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in" style="margin-top: 2rem;">
+    <h1 class="mb-3">🔍 Real-time Transaction Monitoring</h1>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-4 mb-3">
+        <div class="card" style="background: rgba(220, 38, 38, 0.2);">
+            <div class="stat-label">Critical Risk</div>
+            <div class="stat-value" style="font-size: 2rem; color: #fca5a5;">{{ data.critical_count }}</div>
+        </div>
+        <div class="card" style="background: rgba(239, 68, 68, 0.15);">
+            <div class="stat-label">High Risk</div>
+            <div class="stat-value" style="font-size: 2rem; color: var(--danger);">{{ data.high_count }}</div>
+        </div>
+        <div class="card" style="background: rgba(245, 158, 11, 0.15);">
+            <div class="stat-label">Medium Risk</div>
+            <div class="stat-value" style="font-size: 2rem; color: var(--warning);">{{ data.medium_count }}</div>
+        </div>
+        <div class="card">
+            <div class="stat-label">Total Flagged</div>
+            <div class="stat-value" style="font-size: 2rem;">{{ data.total_flagged }}</div>
+        </div>
+    </div>
+
+    <!-- Scenario 1: Sarah's Fraud Detection Workflow -->
+    <div class="card mb-3">
+        <div class="card-header">🚨 Critical Alerts (Score ≥ 90)</div>
+        <div class="card-body">
+            {% if data.transactions.critical %}
+            {% for txn in data.transactions.critical %}
+            <div class="transaction-card fraud-critical">
+                <div class="grid grid-4" style="align-items: center;">
+                    <div>
+                        <strong>Transaction ID:</strong><br>
+                        <code>{{ txn.TransactionID[:16] }}...</code>
+                    </div>
+                    <div>
+                        <strong>Account:</strong><br>
+                        <code>{{ txn.AccountID[:16] }}...</code>
+                    </div>
+                    <div>
+                        <strong>Amount:</strong><br>
+                        <span class="text-danger">${{ "%.2f"|format(txn.Amount) }}</span>
+                    </div>
+                    <div>
+                        <strong>Fraud Score:</strong><br>
+                        <span class="badge badge-danger" style="font-size: 1rem;">{{ txn.FraudScore }}/100</span>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="investigateTransaction('{{ txn.TransactionID }}')">
+                        🔍 Investigate
+                    </button>
+                    <button class="btn btn-danger" onclick="freezeAccount('{{ txn.AccountID }}')">
+                        🔒 Freeze Account
+                    </button>
+                    <button class="btn btn-primary" onclick="approveTransaction('{{ txn.AccountID }}')">
+                        ✓ Approve
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p class="text-center text-muted">✓ No critical risk transactions</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- High Risk Transactions -->
+    <div class="card mb-3">
+        <div class="card-header">⚠️ High Risk (Score 80-89)</div>
+        <div class="card-body">
+            {% if data.transactions.high %}
+            {% for txn in data.transactions.high[:5] %}
+            <div class="transaction-card fraud-high">
+                <div class="grid grid-4" style="align-items: center;">
+                    <div>
+                        <code>{{ txn.TransactionID[:16] }}...</code>
+                    </div>
+                    <div>${{ "%.2f"|format(txn.Amount) }}</div>
+                    <div>{{ txn.TransactionType }}</div>
+                    <div>
+                        <span class="badge badge-danger">{{ txn.FraudScore }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% if data.transactions.high|length > 5 %}
+            <p class="text-center text-muted">+ {{ data.transactions.high|length - 5 }} more</p>
+            {% endif %}
+            {% else %}
+            <p class="text-center text-muted">✓ No high risk transactions</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Medium Risk Transactions -->
+    <div class="card">
+        <div class="card-header">⚡ Medium Risk (Score 70-79)</div>
+        <div class="card-body">
+            {% if data.transactions.medium %}
+            <p class="text-muted">{{ data.transactions.medium|length }} transactions require monitoring</p>
+            {% else %}
+            <p class="text-center text-muted">✓ No medium risk transactions</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function investigateTransaction(transactionId) {
+        alert('Opening investigation panel for: ' + transactionId);
+        // In production, this would open a modal or navigate to investigation details
+    }
+
+    function freezeAccount(accountId) {
+        if (confirm('Are you sure you want to freeze this account?')) {
+            fetch('/analytics/api/freeze-account', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account_id: accountId })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Account frozen successfully!');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                });
+        }
+    }
+
+    function approveTransaction(accountId) {
+        if (confirm('Approve this transaction and activate the account?')) {
+            fetch('/analytics/api/approve-transaction', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account_id: accountId })
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Transaction approved and account activated!');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.error);
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}

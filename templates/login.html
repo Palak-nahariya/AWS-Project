@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Cloud Bank{% endblock %}
+
+{% block content %}
+<div class="container-sm" style="margin-top: 4rem;">
+    <div class="glass-card fade-in">
+        <h2 class="text-center" style="margin-bottom: 2rem;">
+            Login to Cloud Bank
+        </h2>
+
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="••••••••"
+                    required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center mt-3 text-muted">
+            Don't have an account?
+            <a href="{{ url_for('auth.register') }}">Register here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

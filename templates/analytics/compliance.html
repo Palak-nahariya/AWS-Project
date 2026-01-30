@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Compliance Monitoring - Cloud Bank{% endblock %}
+
+{% block extra_head %}
+<style>
+    .compliance-meter {
+        background: var(--bg-slate);
+        border-radius: 0.5rem;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 30px;
+        background: var(--bg-card);
+        border-radius: 1rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .progress-fill {
+        height: 100%;
+        transition: width 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+    }
+
+    .progress-compliant {
+        background: var(--gradient-success);
+    }
+
+    .progress-warning {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    .progress-alert {
+        background: var(--gradient-danger);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in" style="margin-top: 2rem;">
+    <h1 class="mb-3">⚖️ Regulatory Compliance Monitoring</h1>
+
+    <!-- Scenario 3: Lisa's Compliance Workflow -->
+    <div class="card mb-3">
+        <div class="card-header">Compliance Overview</div>
+        <div class="card-body">
+            <div class="grid grid-3">
+                <div>
+                    <div class="stat-label">Total Transactions (30 days)</div>
+                    <div class="stat-value" style="font-size: 2rem;">{{ data.metrics.total_transactions }}</div>
+                </div>
+                <div>
+                    <div class="stat-label">Compliance Status</div>
+                    <div class="stat-value" style="font-size: 1.5rem;">
+                        {% set all_compliant = data.metrics.large_transactions.status == 'compliant' and
+                        data.metrics.suspicious_activity.status == 'compliant' and
+                        data.metrics.transaction_failure_rate.status == 'compliant' %}
+                        {% if all_compliant %}
+                        <span class="badge badge-success" style="font-size: 1rem;">✓ All Compliant</span>
+                        {% else %}
+                        <span class="badge badge-warning" style="font-size: 1rem;">⚠ Review Required</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <div class="stat-label">Last Updated</div>
+                    <div style="font-size: 1rem; margin-top: 0.5rem;">{{ "now" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compliance Metrics -->
+    <div class="card mb-3">
+        <div class="card-header">📋 Large Transaction Monitoring (>$10,000)</div>
+        <div class="card-body">
+            <div class="compliance-meter">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>{{ data.metrics.large_transactions.count }} / {{ data.metrics.large_transactions.threshold }}
+                        transactions</span>
+                    <span
+                        class="badge badge-{% if data.metrics.large_transactions.status == 'compliant' %}success{% else %}warning{% endif %}">
+                        {{ data.metrics.large_transactions.status|upper }}
+                    </span>
+                </div>
+                <div class="progress-bar">
+                    {% set percentage = (data.metrics.large_transactions.count /
+                    data.metrics.large_transactions.threshold * 100) %}
+                    <div class="progress-fill progress-{% if percentage < 80 %}compliant{% elif percentage < 95 %}warning{% else %}alert{% endif %}"
+                        style="width: {{ [percentage, 100]|min }}%;">
+                        {{ "%.1f"|format(percentage) }}%
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="drillDown('large_transactions')">
+                        🔍 Investigate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">🚨 Suspicious Activity Monitoring</div>
+        <div class="card-body">
+            <div class="compliance-meter">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>{{ data.metrics.suspicious_activity.count }} / {{ data.metrics.suspicious_activity.threshold
+                        }} flagged transactions</span>
+                    <span
+                        class="badge badge-{% if data.metrics.suspicious_activity.status == 'compliant' %}success{% else %}danger{% endif %}">
+                        {{ data.metrics.suspicious_activity.status|upper }}
+                    </span>
+                </div>
+                <div class="progress-bar">
+                    {% set percentage = (data.metrics.suspicious_activity.count /
+                    data.metrics.suspicious_activity.threshold * 100) %}
+                    <div class="progress-fill progress-{% if percentage < 80 %}compliant{% elif percentage < 95 %}warning{% else %}alert{% endif %}"
+                        style="width: {{ [percentage, 100]|min }}%;">
+                        {{ "%.1f"|format(percentage) }}%
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="drillDown('suspicious_activity')">
+                        🔍 Investigate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">📉 Transaction Failure Rate</div>
+        <div class="card-body">
+            <div class="compliance-meter">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>{{ "%.2f"|format(data.metrics.transaction_failure_rate.rate) }}% failure rate (Target: < {{
+                            data.metrics.transaction_failure_rate.threshold }}%)</span>
+                            <span
+                                class="badge badge-{% if data.metrics.transaction_failure_rate.status == 'compliant' %}success{% else %}warning{% endif %}">
+                                {{ data.metrics.transaction_failure_rate.status|upper }}
+                            </span>
+                </div>
+                <div class="progress-bar">
+                    {% set percentage = (data.metrics.transaction_failure_rate.rate /
+                    data.metrics.transaction_failure_rate.threshold * 100) %}
+                    <div class="progress-fill progress-{% if percentage < 80 %}compliant{% elif percentage < 95 %}warning{% else %}alert{% endif %}"
+                        style="width: {{ [percentage, 100]|min }}%;">
+                        {{ "%.2f"|format(data.metrics.transaction_failure_rate.rate) }}%
+                    </div>
+                </div>
+                <div style="margin-top: 0.5rem;">
+                    <button class="btn btn-secondary" onclick="drillDown('failed_transactions')">
+                        🔍 Investigate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drill-down Results -->
+    <div id="drilldownResults" style="display: none;" class="card">
+        <div class="card-header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Detailed Investigation</span>
+                <button class="btn btn-outline" onclick="closeDrilldown()" style="padding: 0.25rem 1rem;">Close</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="drilldownContent"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function drillDown(metricType) {
+        const metricNames = {
+            'large_transactions': 'Large Transactions (>$10,000)',
+            'suspicious_activity': 'Suspicious Activity (Fraud Score ≥ 70)',
+            'failed_transactions': 'Failed Transactions'
+        };
+
+        fetch(`/analytics/api/compliance-drilldown?metric_type=${metricType}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    displayDrilldown(metricNames[metricType], data.transactions);
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            });
+    }
+
+    function displayDrilldown(title, transactions) {
+        document.getElementById('drilldownResults').style.display = 'block';
+
+        let html = `<h3 class="mb-3">${title}</h3>`;
+
+        if (transactions.length === 0) {
+            html += '<p class="text-center text-muted">No transactions found.</p>';
+        } else {
+            html += '<table class="table"><thead><tr><th>Transaction ID</th><th>Account ID</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead><tbody>';
+
+            transactions.forEach(txn => {
+                html += `
+                <tr>
+                    <td><code>${txn.TransactionID.substring(0, 16)}...</code></td>
+                    <td><code>${txn.AccountID.substring(0, 16)}...</code></td>
+                    <td>${txn.TransactionType}</td>
+                    <td>$${txn.Amount.toFixed(2)}</td>
+                    <td>${txn.Date.substring(0, 19).replace('T', ' ')}</td>
+                    <td>
+                        ${txn.Status === 'COMPLETED' ? '<span class="badge badge-success">COMPLETED</span>' :
+                        txn.Status === 'PENDING' ? '<span class="badge badge-warning">PENDING</span>' :
+                            '<span class="badge badge-danger">FAILED</span>'}
+                    </td>
+                </tr>
+            `;
+            });
+
+            html += '</tbody></table>';
+            html += `<p class="text-muted">Total: ${transactions.length} transactions</p>`;
+        }
+
+        document.getElementById('drilldownContent').innerHTML = html;
+        document.getElementById('drilldownResults').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeDrilldown() {
+        document.getElementById('drilldownResults').style.display = 'none';
+    }
+</script>
+{% endblock %}
