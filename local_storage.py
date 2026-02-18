@@ -54,12 +54,13 @@ class LocalStorage:
         """Get user by email"""
         for user in self.data['users'].values():
             if user['Email'] == email:
-                return user
+                return user.copy()
         return None
     
     def get_user_by_id(self, user_id):
         """Get user by ID"""
-        return self.data['users'].get(user_id)
+        user = self.data['users'].get(user_id)
+        return user.copy() if user else None
     
     # Account operations
     def create_account(self, account_id, user_id, balance=0, account_type='CHECKING', status='ACTIVE'):

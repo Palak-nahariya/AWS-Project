@@ -1,226 +1,61 @@
 {
   "users": {
-    "d210938c-ff13-4444-8e35-885f6b40173e": {
-      "UserID": "d210938c-ff13-4444-8e35-885f6b40173e",
-      "Name": "Palak Nahariya",
-      "Email": "ken@mail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "customer",
-      "CreatedAt": "2026-01-30T06:34:09.757781",
-      "UpdatedAt": "2026-01-30T06:34:09.757781"
+    "2a1e0403-2ac8-4436-988c-4ffc7ccc3a64": {
+      "UserID": "2a1e0403-2ac8-4436-988c-4ffc7ccc3a64",
+      "Name": "Palak",
+      "Email": "p@mail.com",
+      "PasswordHash": "$2b$12$uRwx7XD1MJUD6YW0tFWR2O0Z7gcYPA7HIShcfyet4CJeVNf4FW5rS",
+      "Role": "analyst",
+      "CreatedAt": "2026-02-18T08:27:05.931418",
+      "UpdatedAt": "2026-02-18T08:27:05.931418"
     },
-    "fff340c4-ae5b-447f-a314-d5071c8bd0cd": {
-      "UserID": "fff340c4-ae5b-447f-a314-d5071c8bd0cd",
-      "Name": "Palak Nahariya",
-      "Email": "admin@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "customer",
-      "CreatedAt": "2026-02-16T07:54:06.088543",
-      "UpdatedAt": "2026-02-16T07:54:06.088543"
-    },
-    "5c33413e-4af1-43f4-9568-482881cafcf0": {
-      "UserID": "5c33413e-4af1-43f4-9568-482881cafcf0",
+    "339bc82c-fb62-432b-852e-e7ce57ef4f95": {
+      "UserID": "339bc82c-fb62-432b-852e-e7ce57ef4f95",
       "Name": "Tushar",
-      "Email": "tushar@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "analyst",
-      "CreatedAt": "2026-02-16T07:55:38.073883",
-      "UpdatedAt": "2026-02-16T07:55:38.073883"
-    },
-    "62bab5ec-b555-4ba2-832c-bcb086a2b83c": {
-      "UserID": "62bab5ec-b555-4ba2-832c-bcb086a2b83c",
-      "Name": "Priyanshu",
-      "Email": "priyanshu@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
+      "Email": "t@mail.com",
+      "PasswordHash": "$2b$12$vWbqaW97lTrvkWW1rYeRM.k1Pv/rNUh/CmcW40rZImu4ae0modtcu",
       "Role": "manager",
-      "CreatedAt": "2026-02-16T08:03:55.160293",
-      "UpdatedAt": "2026-02-16T08:03:55.160293"
+      "CreatedAt": "2026-02-18T08:28:06.603083",
+      "UpdatedAt": "2026-02-18T08:28:06.603083"
     },
-    "64823fed-2686-4636-93f1-b3386973acc1": {
-      "UserID": "64823fed-2686-4636-93f1-b3386973acc1",
-      "Name": "shivali",
-      "Email": "shivali@gmail.com",
-      "PasswordHash": "$2b$12$0vEinlcyOL95kL1/wrtyQO0X3HPyKdR8pa1Yx3G9ykX1/4xQXqVW.",
+    "50635d1c-94fb-4e03-844b-9add12278f43": {
+      "UserID": "50635d1c-94fb-4e03-844b-9add12278f43",
+      "Name": "Shiv",
+      "Email": "s@mail.com",
+      "PasswordHash": "$2b$12$TSJrkbDjMFkYlVc.kLUmauI2b7p5c8vPqW8vIONc1HHV1kw5KZRfa",
       "Role": "compliance",
-      "CreatedAt": "2026-02-16T08:06:34.445891",
-      "UpdatedAt": "2026-02-16T08:06:34.445891"
-    },
-    "3f628b82-e323-4660-9206-caf52f1dcb33": {
-      "UserID": "3f628b82-e323-4660-9206-caf52f1dcb33",
-      "Name": "shivali",
-      "Email": "shivali@gmail.com",
-      "PasswordHash": "$2b$12$YjWfYgon6JvUg6fgSirNWO6tNOqrg1M5qIt3jDG/5IXCzcOJtb11C",
-      "Role": "compliance",
-      "CreatedAt": "2026-02-16T08:06:34.591967",
-      "UpdatedAt": "2026-02-16T08:06:34.591967"
-    },
-    "6324e6bc-23ac-4a02-a780-e119f56c184e": {
-      "UserID": "6324e6bc-23ac-4a02-a780-e119f56c184e",
-      "Name": "kanchan",
-      "Email": "k@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "customer",
-      "CreatedAt": "2026-02-16T09:17:55.582657",
-      "UpdatedAt": "2026-02-16T09:17:55.582657"
-    },
-    "2308363b-f787-4a1a-8f39-4e618a74f946": {
-      "UserID": "2308363b-f787-4a1a-8f39-4e618a74f946",
-      "Name": "palak",
-      "Email": "p@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "analyst",
-      "CreatedAt": "2026-02-16T09:19:04.203807",
-      "UpdatedAt": "2026-02-16T09:19:04.203807"
-    },
-    "6c131625-a54a-45ed-8762-628b1d06f437": {
-      "UserID": "6c131625-a54a-45ed-8762-628b1d06f437",
-      "Name": "tushar das",
-      "Email": "t@gmail.com",
-      "PasswordHash": "$2b$12$JghX.fpKsRMy2kIf5j/stOghum1o6pQ0jRknAL/2g2epcMqX.2F3u",
-      "Role": "manager",
-      "CreatedAt": "2026-02-16T09:19:37.436889",
-      "UpdatedAt": "2026-02-16T09:19:37.436889"
-    },
-    "5f3f6825-a9c8-4f2b-8c1c-8b7225ae52d2": {
-      "UserID": "5f3f6825-a9c8-4f2b-8c1c-8b7225ae52d2",
-      "Name": "priyanshuv",
-      "Email": "priya@gmail.com",
-      "PasswordHash": "$2b$12$ed7XEIHzbtoWwAPF8phuYeKpY20etFS0FWw8qpF9uCK1HbMXVaIKK",
-      "Role": "compliance",
-      "CreatedAt": "2026-02-16T09:20:51.339322",
-      "UpdatedAt": "2026-02-16T09:20:51.339322"
-    },
-    "7bdfcfba-ad91-4f58-9196-73ffa00080b4": {
-      "UserID": "7bdfcfba-ad91-4f58-9196-73ffa00080b4",
-      "Name": "ritu",
-      "Email": "ritu@gmail.com",
-      "PasswordHash": "$2b$12$Ie9r7prigfRlQ7kp3FPzP.mHsmANs5vPNQ8jHbTlTIDkFtNcv8FzC",
-      "Role": "customer",
-      "CreatedAt": "2026-02-16T09:48:15.068876",
-      "UpdatedAt": "2026-02-16T09:48:15.068876"
+      "CreatedAt": "2026-02-18T08:28:49.120165",
+      "UpdatedAt": "2026-02-18T08:28:49.120165"
     }
   },
   "accounts": {
-    "9bdbfa16-26f1-4b13-b48a-801d19c47f61": {
-      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
-      "UserID": "d210938c-ff13-4444-8e35-885f6b40173e",
-      "Balance": 1050.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-01-30T06:34:09.769954",
-      "UpdatedAt": "2026-01-30T06:35:53.044484"
-    },
-    "caa86a70-4033-4684-a362-136ad99f55f4": {
-      "AccountID": "caa86a70-4033-4684-a362-136ad99f55f4",
-      "UserID": "fff340c4-ae5b-447f-a314-d5071c8bd0cd",
+    "4dea80fb-1dbb-4a7c-905b-fd20ec5cf980": {
+      "AccountID": "4dea80fb-1dbb-4a7c-905b-fd20ec5cf980",
+      "UserID": "2a1e0403-2ac8-4436-988c-4ffc7ccc3a64",
       "Balance": 1000.0,
       "AccountType": "SAVINGS",
       "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T07:54:06.092034",
-      "UpdatedAt": "2026-02-16T07:54:06.092034"
+      "CreatedAt": "2026-02-18T08:27:05.935334",
+      "UpdatedAt": "2026-02-18T08:27:05.935334"
     },
-    "36e75d59-8202-4dd8-9286-eda267926aa3": {
-      "AccountID": "36e75d59-8202-4dd8-9286-eda267926aa3",
-      "UserID": "5c33413e-4af1-43f4-9568-482881cafcf0",
+    "8db8f62a-07d3-4ea8-bbfd-638f89d65699": {
+      "AccountID": "8db8f62a-07d3-4ea8-bbfd-638f89d65699",
+      "UserID": "339bc82c-fb62-432b-852e-e7ce57ef4f95",
       "Balance": 1000.0,
       "AccountType": "SAVINGS",
       "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T07:55:38.077925",
-      "UpdatedAt": "2026-02-16T07:55:38.077925"
+      "CreatedAt": "2026-02-18T08:28:06.604416",
+      "UpdatedAt": "2026-02-18T08:28:06.604416"
     },
-    "d5d53f7a-964b-4d91-a858-d62a7008ad2c": {
-      "AccountID": "d5d53f7a-964b-4d91-a858-d62a7008ad2c",
-      "UserID": "62bab5ec-b555-4ba2-832c-bcb086a2b83c",
+    "be246c37-1c01-47ea-a039-23356afc3240": {
+      "AccountID": "be246c37-1c01-47ea-a039-23356afc3240",
+      "UserID": "50635d1c-94fb-4e03-844b-9add12278f43",
       "Balance": 1000.0,
       "AccountType": "SAVINGS",
       "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T08:03:55.162631",
-      "UpdatedAt": "2026-02-16T08:03:55.162631"
-    },
-    "917445ef-4a1b-4c9b-aee1-0e110ddf32b5": {
-      "AccountID": "917445ef-4a1b-4c9b-aee1-0e110ddf32b5",
-      "UserID": "64823fed-2686-4636-93f1-b3386973acc1",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T08:06:34.449301",
-      "UpdatedAt": "2026-02-16T08:06:34.449301"
-    },
-    "b8de8e9f-7c17-4caa-a61c-c52a9b5fde48": {
-      "AccountID": "b8de8e9f-7c17-4caa-a61c-c52a9b5fde48",
-      "UserID": "3f628b82-e323-4660-9206-caf52f1dcb33",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T08:06:34.594380",
-      "UpdatedAt": "2026-02-16T08:06:34.594380"
-    },
-    "d835e9e6-bfb5-47d8-962d-7f0762505847": {
-      "AccountID": "d835e9e6-bfb5-47d8-962d-7f0762505847",
-      "UserID": "6324e6bc-23ac-4a02-a780-e119f56c184e",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T09:17:55.596685",
-      "UpdatedAt": "2026-02-16T09:17:55.596685"
-    },
-    "de9cf9d3-16ca-4b56-8e6e-f37de9f86662": {
-      "AccountID": "de9cf9d3-16ca-4b56-8e6e-f37de9f86662",
-      "UserID": "2308363b-f787-4a1a-8f39-4e618a74f946",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T09:19:04.207961",
-      "UpdatedAt": "2026-02-16T09:19:04.207961"
-    },
-    "b87c0880-3920-4d35-966e-9ecb192b4afb": {
-      "AccountID": "b87c0880-3920-4d35-966e-9ecb192b4afb",
-      "UserID": "6c131625-a54a-45ed-8762-628b1d06f437",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T09:19:37.440467",
-      "UpdatedAt": "2026-02-16T09:19:37.440467"
-    },
-    "98bd8c17-d7d5-4f1d-ada6-1b0cf249c795": {
-      "AccountID": "98bd8c17-d7d5-4f1d-ada6-1b0cf249c795",
-      "UserID": "5f3f6825-a9c8-4f2b-8c1c-8b7225ae52d2",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T09:20:51.345893",
-      "UpdatedAt": "2026-02-16T09:20:51.345893"
-    },
-    "fed6c3d5-327d-4a9f-af9e-31627905b68a": {
-      "AccountID": "fed6c3d5-327d-4a9f-af9e-31627905b68a",
-      "UserID": "7bdfcfba-ad91-4f58-9196-73ffa00080b4",
-      "Balance": 1000.0,
-      "AccountType": "SAVINGS",
-      "Status": "ACTIVE",
-      "CreatedAt": "2026-02-16T09:48:15.083368",
-      "UpdatedAt": "2026-02-16T09:48:15.083368"
+      "CreatedAt": "2026-02-18T08:28:49.121772",
+      "UpdatedAt": "2026-02-18T08:28:49.121772"
     }
   },
-  "transactions": {
-    "8fcc161e-4825-4e04-ba70-cb0c8561d44f": {
-      "TransactionID": "8fcc161e-4825-4e04-ba70-cb0c8561d44f",
-      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
-      "TransactionType": "WITHDRAW",
-      "Amount": 50.0,
-      "Date": "2026-01-30T06:35:34.711053",
-      "Status": "COMPLETED",
-      "Description": "",
-      "FraudScore": 0
-    },
-    "d495e3e0-a54d-4d66-8f05-1d8e623f948d": {
-      "TransactionID": "d495e3e0-a54d-4d66-8f05-1d8e623f948d",
-      "AccountID": "9bdbfa16-26f1-4b13-b48a-801d19c47f61",
-      "TransactionType": "DEPOSIT",
-      "Amount": 100.0,
-      "Date": "2026-01-30T06:35:53.042702",
-      "Status": "COMPLETED",
-      "Description": "",
-      "FraudScore": 0
-    }
-  }
+  "transactions": {}
 }
