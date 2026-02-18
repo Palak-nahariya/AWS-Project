@@ -57,3 +57,15 @@ htmlcov/
 
 # AWS
 .aws/
+
+# Local data (contains user passwords)
+local_data.json
+
+# Debug/test scripts
+debug_passwords.py
+test_password_fix.py
+test_aws_connection.py
+generate_hash.py
+
+# Flask session files
+flask_session/
