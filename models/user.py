@@ -108,6 +108,10 @@ class User:
         if not user:
             return {'success': False, 'error': 'Invalid credentials'}
         
+        # Check if password hash exists
+        if 'PasswordHash' not in user:
+            return {'success': False, 'error': 'Account not properly configured. Please contact support.'}
+        
         if self.verify_password(password, user['PasswordHash']):
             # Remove password hash before returning
             user.pop('PasswordHash', None)
